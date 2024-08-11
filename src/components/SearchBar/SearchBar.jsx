@@ -1,5 +1,44 @@
+import toast,{ Toaster } from "react-hot-toast";
+import css from './SearchBar.module.css';
+function SearchBar({ onSubmit }) {
+  
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const query = form.elements.query.value.trim();
+    
+    if (query.trim() === "") {
+      toast.error("Please enter a search term.");
+      return;
+    }
+    
+    onSubmit(query);
+    form.reset();
+  };
+  
+  
+  return (
+    <header>
+      <form className={css.form} onSubmit={handleSubmit}>
+        <input className={css.input}
+          type="text"
+          name="query"
+          autoComplete="off"
+          placeholder="Search images and photos"
+          autoFocus
+          />
+        <button className={css.button} type="submit">Search</button>
+      </form>
+      <Toaster/>
+    </header>
+  );
+}
+
+export default SearchBar;
+
 // import { ErrorMessage, Field, Form, Formik } from 'formik';
 // import * as Yup from 'yup';
+// import { useState } from 'react';
 
 // const SearchPhotosValidationSchema = Yup.object().shape({
 //     query: Yup.string()
@@ -10,13 +49,21 @@
 // const INITIAL_VALUES = {
 //     query: '',
 // };
-// const SearchForm = ({ onSubmit }) => {
-//     const handleSubmit = (event) => {
-//         event.preventDefault();
-//         const form = event.target;
-//         const query = form.elements.query.value.trim();
+// const SearchBar = ({ onSubmit }) => {
 
-//         onSubmit(query);
+//   const [query, setQuery] = useState('');
+//     const handleSubmit = (event) => {
+//       event.preventDefault();
+//       setQuery(event.target.elements.query.value);
+//         const form = event.target;
+//       const query = form.elements.query.value.trim();
+
+//       if (!query.trim()) {
+//           return ErrorMessage('Please enter search term!');
+//       }
+
+//       onSubmit(query);
+//       setQuery('');
 //         form.reset();
 //     };
 //     {
@@ -49,43 +96,4 @@
                         
 
 
-// export default SearchForm
-
-// src/components/SearchBar.js
-
-import { toast } from "react-hot-toast";
-
-function SearchForm({ onSubmit }) {
-  
-  const handleSubmit = (event) => {
-      event.preventDefault();
-      const form = event.target;
-      const query = form.elements.query.value.trim();
-
-    if (query.trim() === "") {
-      toast.error("Please enter a search term.");
-      return;
-    }
-
-    onSubmit(query);
-    form.reset();
-  };
-  
-
-  return (
-    <header>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="query"
-          autoComplete="off"
-          placeholder="Search images and photos"
-          autoFocus
-        />
-        <button type="submit">Search</button>
-      </form>
-    </header>
-  );
-}
-
-export default SearchForm;
+// export default SearchBar;

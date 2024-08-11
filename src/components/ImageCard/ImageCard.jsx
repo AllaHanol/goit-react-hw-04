@@ -1,11 +1,13 @@
-function ImageCard({ image, onClick }) {
+import css from "./ImageCard.module.css";
+const ImageCard = ({ description, small, regular, openModal }) => {
   return (
-    <li onClick={onClick}>
-      <div>
-        <img src={image.urls.small} alt={image.alt_description} />
-      </div>
-    </li>
+    <img
+      className={css.image}
+      src={small}
+      alt={description}
+      onClick={() => openModal(regular, description)}
+    />
   );
-}
+};
 
 export default ImageCard;

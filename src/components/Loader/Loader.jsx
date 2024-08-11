@@ -1,4 +1,4 @@
-import { Audio } from 'react-loader-spinner'
+import { Audio } from 'react-loader-spinner';
 const Loader = () => {
 
     return (
@@ -16,4 +16,4 @@ const Loader = () => {
     )
 }
 
-export default Loader
+export default Loader;

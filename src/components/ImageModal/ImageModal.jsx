@@ -1,30 +1,28 @@
-import ReactModal from "react-modal";
+import Modal from "react-modal";
+import css from "./ImageModal.module.css";
 
-ReactModal.setAppElement("#root");
+Modal.setAppElement("#root");
 
-function ImageModal({ image, onClose }) {
-  const handleKeyDown = (e) => {
-    if (e.key === "Escape") {
-      onClose();
-    }
-  };
-
+const ImageModal = ({ isOpen, closeModal, imgUrl, imgAlt }) => {
   return (
-    <ReactModal
-      isOpen={!!image}
-      onRequestClose={onClose}
-      onKeyDown={handleKeyDown}
-      shouldCloseOnOverlayClick={true}
-      className="modal"
-      overlayClassName="overlay"
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={closeModal}
+      style={{
+        overlay: {
+          backgroundColor: "rgba(19, 19, 19, 0.5)",
+        },
+        content: {
+          padding: "0",
+          height: "max-content",
+          overflow: "hidden",
+        },
+      }}
     >
-      <div>
-        <img src={image.urls.regular} alt={image.alt_description} />
-      </div>
-      <button onClick={onClose}>Close</button>
-    </ReactModal>
+      <img className={css.modalImage} src={imgUrl} alt={imgAlt} />
+    </Modal>
   );
-}
+};
 
 export default ImageModal;
 

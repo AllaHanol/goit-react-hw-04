@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import toast, { Toaster } from "react-hot-toast"; 
 import Loader from './components/Loader/Loader';
-import SearchForm from './components/SearchForm/SearchForm';
-import GalleryList from './components/GalleryList/GalleryList';
+import SearchBar from './components/SearchBar/SearchBar';
+import ImageGallery from './components/ImageGallery/ImageGallery';
 import { getPhotos } from './images-api';
 import './App.css';
 import ErrorMessage from './components/ErrorMessage/ErrorMessage';
@@ -13,12 +13,11 @@ function App() {
   const [images, setImages] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  // const [searchValue, setSearchValue] = useState(null)
   const [page, setPage] = useState(1)
   const [query, setQuery] = useState('')
   const [isEmpty, setIsEmpty] = useState(false)
   const [nextPage, setNextPage] = useState(false)
-   const [modalImage, setModalImage] = useState(null);
+  const [modal, setModal] = useState({ isOpen: false, imgUrl: "", imgAlt: "" });
   
   const handleSubmit = (searchValue) => {
     setQuery(searchValue);
@@ -36,7 +35,8 @@ function App() {
       setLoading(true);
       setError(null);
       try {
-        const {results, total, total_pages} = await getPhotos(query, page);
+        const { results, total, total_pages } = await getPhotos(query, page);
+        
         if (!total) {
           setIsEmpty(true);
           console.log('No images found');
@@ -51,7 +51,7 @@ function App() {
         
       
         setImages((prevImages) => [...prevImages, ...results]);
-        setNextPage(page<total_pages)
+        setNextPage(page < total_pages)
       } catch (error) {
         setError(error.message);
       } finally {
@@ -65,32 +65,32 @@ function App() {
   const handleLoadMoreClick = () => {
     setPage((prevPage) => prevPage + 1);
   }
-  const openModal = (image) => setModalImage(image);
-  const closeModal = () => setModalImage(null);
+  const openModal = (url, alt) => {
+    setModal({ ...modal, isOpen: true, imgUrl: url, imgAlt: alt });
+  };
+  const closeModal = () => {
+    setModal({ ...modal, isOpen: false, imgUrl: "", imgAlt: "" && "noAlt" });
+  };
     
-    return (
-      <>
-        <div><h1>Photos</h1>
-        <SearchForm onSubmit={handleSubmit} />
-          {images && <GalleryList images={images} />}</div>
-        <GalleryList images={images} onImageClick={openModal} />
-        {loading && <Loader />}
-        {error && <ErrorMessage message={error} />}
-        {/* {Array.isArray(images) && images.map((image) => {
-          return (
-            <img
-              key={image.id}
-              src={image.urls.regular}
-              alt={image.description}
-            />
-          )
-        })}
-        {Array.isArray(images) && images.length === 0 && (<p>No images found. Try another search.</p>)} */}
-        {modalImage && <ImageModal image={modalImage} onClose={closeModal} />}
-        {nextPage && <LoadMoreBtn handleLoadMoreClick={handleLoadMoreClick} />}
-        {isEmpty && <Toaster />}
-      </>
-    )
-  }
+  return (
+    <>
+      <h1>Photos</h1>
+      <SearchBar onSubmit={handleSubmit} />
+      {images.length > 0 && (<ImageGallery images={images} openModal={openModal} />)}
+            
+      {loading && <Loader />}
+      {error && <ErrorMessage message={error} />}
+      {modal && <ImageModal image={modal} onClose={closeModal} />}
+      {nextPage && <LoadMoreBtn handleLoadMoreClick={handleLoadMoreClick} />}
+      {isEmpty && <Toaster />}
+      <ImageModal
+        isOpen={modal.isOpen}
+        imgUrl={modal.imgUrl}
+        imgAlt={modal.imgAlt}
+        closeModal={closeModal}
+      />
+    </>
+  );
+}
 
   export default App;
