@@ -4,7 +4,19 @@
   padding: 2rem;
   text-align: center;
 }
-
+body {
+  margin: 0;
+}
+  ul, li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+ *,
+*::after,
+*::before {
+  box-sizing: border-box;
+} 
 .logo {
   height: 6em;
   padding: 1.5em;
